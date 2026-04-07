@@ -25,7 +25,6 @@ class ManagementSystem(AuthSystem, DataManager):
 
     def display_table_interface(self):
         name = input("Enter the table name to display: ")
-        # Call the method from DataManager
         self.display_table(name) 
 
 if __name__ == "__main__":
@@ -37,7 +36,4 @@ if __name__ == "__main__":
         app.run_app()
     else:
         print(f"Error: Database path '{db_path}' is invalid or missing.")
-        # How to update table with new column and hashed password?#
-        # How to add new user with hashed password?
-        # How to handle user registration and password updates securely?
         

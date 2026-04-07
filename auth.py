@@ -7,7 +7,7 @@ class AuthSystem:
         self.db_path = db_path
 
     def hash_password(self, password):
-        """Generates a secure salt and hashes the password."""
+        # Generates a secure salt and hashes the password
         return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     
     def authenticate_user(self, username, password):
