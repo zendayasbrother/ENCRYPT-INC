@@ -37,3 +37,5 @@ if __name__ == "__main__":
     else:
         print(f"Error: Database path '{db_path}' is invalid or missing.")
         
+    # Admins: Create and manage users, Read Tables and Figures, Update and Delete records (binary fail / success)
+    # Creators and Freelancers: Read Respective Tables and Figures, Update personal metrics, Propose new projects and ideas for approval
