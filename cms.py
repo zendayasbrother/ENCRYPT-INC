@@ -38,4 +38,5 @@ if __name__ == "__main__":
         print(f"Error: Database path '{db_path}' is invalid or missing.")
         
     # Admins: Create and manage users, Read Tables and Figures, Update and Delete records (binary fail / success)
-    # Creators and Freelancers: Read Respective Tables and Figures, Update personal metrics, Propose new projects and ideas for approval
+    # Creators and Freelancers: Read Respective Tables and Figures, Update personal metrics, Propose new projects and ideas for approval 
+    # possibly main.py (?) to run the app and separate files for different user roles?
