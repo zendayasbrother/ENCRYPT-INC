@@ -14,30 +14,11 @@ class AuthSystem:
         if not self.db_path or not os.path.exists(self.db_path):
             print(f"Error: Database file not found at {self.db_path}")
             return False
-            
-        try:
-            con = sqlite3.connect(self.db_path)
-            cursor = con.cursor()
-            # Select the hashed password for the given username
-            cursor.execute("SELECT password FROM users WHERE username = ?", (username,))
-            result = cursor.fetchone()
-            
-            if result:
-                stored_hash = result[0]
-                # If stored as string in SQLite, convert to bytes
-                if isinstance(stored_hash, str):
-                    stored_hash = stored_hash.encode('utf-8')
-                
-                # Compare entered password with stored hash
-                return bcrypt.checkpw(password.encode('utf-8'), stored_hash)
-                
-        except sqlite3.Error as error:
-            print(f"Database error: {error}")
-        finally:
-            if 'con' in locals():
-                con.close()
         
-        return False
+        # Authentication logic here, checking against the database
+        # sign up: hash the password and store it in the database, doesn't use plant_seeds() function, just a one time setup for the admin user
+        # log in: retrieve the hashed password from the database and compare it with the provided password using bcrypt.checkpw() in plant_seeds()
+        pass
         
 def plant_seeds(db_path):
     try:
