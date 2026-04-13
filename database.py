@@ -25,18 +25,6 @@ class DataManager:
         except sqlite3.Error as error:
             print(f"Database error: {error}")
             return None, None
-        
-    def proposals(self):
-        conn, cursor = self.connect_database()
-        if cursor:
-            try:
-                cursor.execute("SELECT * FROM proposals")
-                return cursor.fetchall()
-            except Exception as e:
-                print(f"Error fetching proposals: {e}")
-            finally:
-                conn.close()
-        return [] # first, admin window, then talent inputs and requests
     
 
     def display_table(self, table_name):
