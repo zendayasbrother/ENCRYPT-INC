@@ -22,6 +22,7 @@ class ManagementSystem(AuthSystem, DataManager):
             self.display_table_interface()
         else:
             print("\nAccess Denied.")
+            # replace with extended function
 
     def display_table_interface(self):
         name = input("Enter the table name to display: ")

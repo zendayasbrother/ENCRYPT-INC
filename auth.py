@@ -1,6 +1,7 @@
-import bcrypt
 import os
-import sqlite3
+import bcrypt
+import sqlite3  
+from database import DataManager
 
 class AuthSystem: 
     def __init__(self, db_path):
@@ -10,10 +11,34 @@ class AuthSystem:
         # Generates a secure salt and hashes the password
         return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
     
+    def check_password(self, password, hashed):
+        # Compares the provided password with the stored hashed password
+        return bcrypt.checkpw(password.encode('utf-8'), hashed)
+    
+    def sign_up(self, username, password, role):
+        if not self.db_path or not os.path.exists(self.db_path):
+            print(f"Error: Database file not found at {self.db_path}")
+            return False # replace with extended function
+        
+        hashed = self.hash_password(password)
+        try:
+            with self._get_connection() as conn:
+                cursor = conn.cursor()
+                cursor.execute('''
+                    INSERT INTO Users (Username, Password, Role)
+                    VALUES (?, ?, ?)
+                ''', (username, hashed, role))
+                conn.commit()
+                print(f"User {username} registered successfully.")
+        except sqlite3.IntegrityError:
+            print("Error: Username already exists.")
+        
+
+    
     def authenticate_user(self, username, password):
         if not self.db_path or not os.path.exists(self.db_path):
             print(f"Error: Database file not found at {self.db_path}")
-            return False
+            return False # replace with extended function
         
         # Authentication logic here, checking against the database
         # sign up: hash the password and store it in the database, doesn't use plant_seeds() function, just a one time setup for the admin user
