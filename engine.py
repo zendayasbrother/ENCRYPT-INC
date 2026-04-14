@@ -24,3 +24,7 @@ class ManagementSystem(AuthSystem):
     def display_interface(self):
         name = input("Enter the table name to display: ")
         self.display_table(name)
+        
+        # Admins can also view and accept / decline proposals sent by talent before deciding to search up and manipulate tables and records
+        # Talent can only view their own records and can create proposals via algorithmic form; Pairings, Genre, Budget, etc.
+        
