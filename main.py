@@ -1,8 +1,4 @@
 import os
-import pandas as pd 
-import sqlite3 
-from auth import AuthSystem
-from database import DataManager
 from engine import ManagementSystem
 from dotenv import load_dotenv
 
@@ -14,4 +10,4 @@ if __name__ == "__main__":
         app = ManagementSystem(db_path)
         app.run_app()
     else:
-        print(f"Error: Database path '{db_path}' is invalid or missing.")
+        print(f"Error: Database path is invalid or missing.")
