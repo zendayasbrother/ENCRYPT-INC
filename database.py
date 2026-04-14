@@ -29,9 +29,15 @@ class DataManager:
         conn, _ = self.connect_database()
         if conn:
             try:
+                # pandas makes SQL results look like a clean spreadsheet
                 df = pd.read_sql_query(f"SELECT * FROM {table_name}", conn)
-                print(f"\n--- {table_name} Table ---")
-                print(df)
+                
+                if df.empty:
+                    print(f"\n[!] The {table_name} table is currently empty.")
+                else:
+                    print(f"\n--- {table_name} Table ---")
+                    # index=False makes it look cleaner in the console
+                    print(df.to_string(index=False)) 
             except Exception as e:
                 print(f"Error reading table: {e}")
             finally:

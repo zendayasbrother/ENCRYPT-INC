@@ -25,10 +25,9 @@ class ManagementSystem(AuthSystem):
         if user_type:
             print(f"\nLogin Successful! Welcome: {user_type}")
             if user_type == "Admins":
-                self.display_table_interface()
+                self.display_interface() 
             else:
                 print("Accessing Talent Dashboard...")
-                # Talent-specific logic
         else:
             print("\nAccess Denied.")
 
