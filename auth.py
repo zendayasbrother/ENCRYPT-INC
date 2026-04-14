@@ -71,5 +71,5 @@ class AuthSystem(DataManager):
         self.sign_up("Daniel", "Founder", "do3005", "crashcrash7", "Founder & CEO", "Admins")
         
         # Creator seeds
-        self.sign_up("Alex", "Crimson", "a.crimson", "cruzofdream", "Tech", "Creators")
+        self.sign_up("Alex", "Crimson", "a.crimson", "cruzofdreams", "Tech", "Creators")
         

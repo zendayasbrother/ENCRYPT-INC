@@ -26,7 +26,8 @@ class ManagementSystem(AuthSystem):
         
         if user_type:
             # Now you can use first_name here!
-            print(f"\nLogin Successful! Welcome {user_type}: {first_name} // ({user})") 
+            print(f"{user_type.upper()}")
+            print(f"\nLogin Successful! Welcome: {first_name} // ({user})") 
             
             if user_type == "Admins":
                 self.display_interface() 
