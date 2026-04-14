@@ -12,13 +12,13 @@ class AuthSystem(DataManager):
     def check_password(self, password, hashed):
         return bcrypt.checkpw(password.encode('utf-8'), hashed)
     
-    def sign_up(self, email, username, password, table):
+    def sign_up(self, email, username, password, table, first_name):
         conn, cursor = self.connect_database()
         hashed = self.hash_password(password)
 
         try:
-            # 1. Search for a pre-existing profile by EMAIL instead of Name
             cursor.execute(f"SELECT Username FROM {table} WHERE ContactEmail = ?", (email,))
+            cursor.execute(f"SELECT FirstName FROM {table} WHERE ContactEmail = ?", (email,))
             record = cursor.fetchone()
 
             if record:
@@ -26,7 +26,7 @@ class AuthSystem(DataManager):
                 if current_user is None or current_user == "":
                     # VALIDATION: Only attach if a username hasn't been set yet
                     query = f"UPDATE {table} SET Username = ?, HashedPassword = ? WHERE ContactEmail = ?"
-                    cursor.execute(query, (username, hashed, email))
+                    cursor.execute(query, (first_name, username, hashed, email))
                     print(f"[*] Identity Verified. Credentials attached to {email}")
                 else:
                     print("[!] Error: This account is already registered.")
