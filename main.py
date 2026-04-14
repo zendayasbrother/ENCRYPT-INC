@@ -8,6 +8,7 @@ if __name__ == "__main__":
     
     if db_path and os.path.exists(db_path):
         app = ManagementSystem(db_path)
+        app.plant_seeds() 
         app.run_app()
     else:
         print(f"Error: Database path is invalid or missing.")

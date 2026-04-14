@@ -46,30 +46,30 @@ class AuthSystem(DataManager):
     def authenticate_user(self, username, password):
         conn, cursor = self.connect_database()
         if not conn: 
-            return None
+            return None, None # Return two Nones to maintain consistency
 
-        # Searching across tables specifically by the new 'Username' column
         tables = ["Admins", "Creators", "Freelancers"]
         for table in tables:
             try:
-                # We select the HashedPassword where the Username matches
-                cursor.execute(f"SELECT HashedPassword FROM {table} WHERE Username = ?", (username,))
+                # Fetch BOTH the password and the FirstName
+                cursor.execute(f"SELECT HashedPassword, FirstName FROM {table} WHERE Username = ?", (username,))
                 result = cursor.fetchone()
                 
                 if result and self.check_password(password, result[0]):
+                    first_name = result[1]
                     conn.close()
-                    return table # Successful login returns the table (Role)
+                    return table, first_name # Return both values
             except sqlite3.Error:
                 continue 
         
         if conn:
             conn.close()
-        return None
+        return None, None
         
     def plant_seeds(self):
         # Admin seed
         self.sign_up("Daniel", "Founder", "do3005", "crashcrash7", "Founder & CEO", "Admins")
         
-        # Updated Creator seed to match a record from your database (Alex Crimson)
+        # Creator seeds
         self.sign_up("Alex", "Crimson", "a.crimson", "cruzofdream", "Tech", "Creators")
         
