@@ -15,17 +15,15 @@ class DataManager:
             return None, None
             
         try:
-            con = sqlite3.connect(self.db_path, uri =True)
+            con = sqlite3.connect(self.db_path)
             cursor = con.cursor()
             
-            # Security & Health Check
             cursor.execute("PRAGMA integrity_check;")
             if cursor.fetchone()[0] == "ok":
                 return con, cursor
         except sqlite3.Error as error:
             print(f"Database error: {error}")
             return None, None
-    
 
     def display_table(self, table_name):
         conn, _ = self.connect_database()
