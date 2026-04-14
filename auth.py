@@ -68,8 +68,8 @@ class AuthSystem(DataManager):
         
     def plant_seeds(self):
         # Admin seed
-        self.sign_up("Daniel", "Founder", "do3005", "admin123", "Founder & CEO", "Admins")
+        self.sign_up("Daniel", "Founder", "do3005", "crashcrash7", "Founder & CEO", "Admins")
         
         # Updated Creator seed to match a record from your database (Alex Crimson)
-        self.sign_up("Alex", "Crimson", "a.crimson", "creator123", "Tech", "Creators")
+        self.sign_up("Alex", "Crimson", "a.crimson", "cruzofdream", "Tech", "Creators")
         

@@ -15,12 +15,18 @@ class DataManager:
             return None, None
             
         try:
-            con = sqlite3.connect(self.db_path)
+            # Added timeout=10 to prevent the app from hanging if the file is locked
+            con = sqlite3.connect(self.db_path, timeout=10)
             cursor = con.cursor()
             
+            # This check ensures the file isn't corrupted
             cursor.execute("PRAGMA integrity_check;")
             if cursor.fetchone()[0] == "ok":
                 return con, cursor
+            else:
+                print("Database integrity check failed.")
+                return None, None
+                
         except sqlite3.Error as error:
             print(f"Database error: {error}")
             return None, None
