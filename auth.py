@@ -12,50 +12,32 @@ class AuthSystem(DataManager):
     def check_password(self, password, hashed):
         return bcrypt.checkpw(password.encode('utf-8'), hashed)
     
-    def sign_up(self, first_name, last_name, username, password, role, table):
-
+    def sign_up(self, email, username, password, table):
         conn, cursor = self.connect_database()
-        if not conn: return None, None
+        hashed = self.hash_password(password)
 
         try:
-            hashed = self.hash_password(password)
-            cursor.execute(f"SELECT Username FROM {table} WHERE Username = ?", (username,))
-            exists_by_user = cursor.fetchone()
+            # 1. Search for a pre-existing profile by EMAIL instead of Name
+            cursor.execute(f"SELECT Username FROM {table} WHERE ContactEmail = ?", (email,))
+            record = cursor.fetchone()
 
-            if exists_by_user:
-                query = f"UPDATE {table} SET HashedPassword = ? WHERE Username = ?"
-                cursor.execute(query, (hashed, username))
-                print(f"[*] Credentials synced for: {username}")
-            else:
-                # 2. If Username not found, try to find the original record by Name
-                cursor.execute(f"SELECT FirstName FROM {table} WHERE FirstName = ? AND LastName = ?", (first_name, last_name))
-                exists_by_name = cursor.fetchone()
-
-                if exists_by_name:
-                    # Found the original record! Attach the username and hash to it.
-                    query = f"UPDATE {table} SET Username = ?, HashedPassword = ? WHERE FirstName = ? AND LastName = ?"
-                    cursor.execute(query, (username, hashed, first_name, last_name))
-                    print(f"[*] Original record found for {first_name}. Credentials attached.")
+            if record:
+                current_user = record[0]
+                if current_user is None or current_user == "":
+                    # VALIDATION: Only attach if a username hasn't been set yet
+                    query = f"UPDATE {table} SET Username = ?, HashedPassword = ? WHERE ContactEmail = ?"
+                    cursor.execute(query, (username, hashed, email))
+                    print(f"[*] Identity Verified. Credentials attached to {email}")
                 else:
-                    # 3. Truly a new person: Insert new record
-                    if table == "Admins":
-                        query = f"INSERT INTO Admins (FirstName, LastName, Role, Username, HashedPassword) VALUES (?, ?, ?, ?, ?)"
-                        params = (first_name, last_name, role, username, hashed)
-                    elif table == "Creators":
-                        query = f'INSERT INTO Creators (FirstName, LastName, "Primary Niche", "Secondary Niche", Country, Username, HashedPassword) VALUES (?, ?, ?, ?, ?, ?, ?)'
-                        params = (first_name, last_name, role, "General", "Unknown", username, hashed)
-                    
-                    cursor.execute(query, params)
-                    print(f"[+] New account created for: {username}")
-            
-            conn.commit()
-            return table, first_name
+                    print("[!] Error: This account is already registered.")
+                    return None, None
+            else:
+                print("[!] Access Denied: Email not recognized in Encrypt Inc Registry.")
+                return None, None
 
+            conn.commit()
         except sqlite3.Error as e:
-            print(f"Portal Error: {e}")
-            return None, None
-        finally:
-            conn.close()
+            print(f"Auth Error: {e}")
 
     def authenticate_user(self, username, password):
         conn, cursor = self.connect_database()
@@ -74,6 +56,6 @@ class AuthSystem(DataManager):
         if conn: conn.close()
         return None, None
         
-    def plant_seeds(self):
-        self.sign_up("Daniel", "Founder", "do3005", "crashcrash7", "Founder & CEO", "Admins")
-        self.sign_up("Alex", "Crimson", "a.crimson", "cruzofdreams", "Tech", "Creators")
+    def plant_seeds(self): 
+        self.sign_up("daniel@encrypt.com", "do3005", "crashcrash7", "Admins") 
+        self.sign_up("a.crimson@encrypt.com", "acronims", "cruzofdreams", "Creators")
