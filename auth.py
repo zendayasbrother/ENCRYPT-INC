@@ -13,14 +13,12 @@ class AuthSystem(DataManager):
         return bcrypt.checkpw(password.encode('utf-8'), hashed)
     
     def sign_up(self, first_name, last_name, username, password, role, table):
-        """deciphers whether sign up (insert) or auth (updated hash) needs to happen"""
+
         conn, cursor = self.connect_database()
         if not conn: return None, None
 
         try:
             hashed = self.hash_password(password)
-            
-            # 1. Try to find by Username first
             cursor.execute(f"SELECT Username FROM {table} WHERE Username = ?", (username,))
             exists_by_user = cursor.fetchone()
 
