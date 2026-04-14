@@ -75,6 +75,5 @@ class AuthSystem(DataManager):
         return None, None
         
     def plant_seeds(self):
-        # One fell swoop: Syncs/Creates and could theoretically log them in
         self.sign_up("Daniel", "Founder", "do3005", "crashcrash7", "Founder & CEO", "Admins")
         self.sign_up("Alex", "Crimson", "a.crimson", "cruzofdreams", "Tech", "Creators")
