@@ -21,7 +21,7 @@ class ManagementSystem(AuthSystem):
         user = input("Username: ")
         pw = input("Password: ")
         
-        # Unpack both the table (role) and the name
+        
         user_type, first_name = self.authenticate_user(user, pw)
         
         if user_type:

@@ -6,9 +6,6 @@ if __name__ == "__main__":
     load_dotenv() 
     db_path = os.getenv('DB_PATH') 
     
-    if db_path and os.path.exists(db_path):
-        app = ManagementSystem(db_path)
-        app.plant_seeds() 
-        app.run_app()
-    else:
-        print(f"Error: Database path is invalid or missing.")
+    app = ManagementSystem(db_path)
+    app.plant_seeds() # This will only add them if they don't exist
+    app.run_app()     # This starts your "Sign Up / Login > Credentials" flow
