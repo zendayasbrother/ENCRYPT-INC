@@ -12,37 +12,45 @@ class AuthSystem(DataManager):
     def check_password(self, password, hashed):
         return bcrypt.checkpw(password.encode('utf-8'), hashed)
     
-    def access_portal(self, first_name, last_name, username, password, role, table):
-        """Unified function: Checks database, Updates if exists, Inserts if new."""
+    def sign_up(self, first_name, last_name, username, password, role, table):
+        """deciphers whether sign up (insert) or auth (updated hash) needs to happen"""
         conn, cursor = self.connect_database()
         if not conn: return None, None
 
         try:
             hashed = self.hash_password(password)
             
-            # Check if user exists
+            # 1. Try to find by Username first
             cursor.execute(f"SELECT Username FROM {table} WHERE Username = ?", (username,))
-            exists = cursor.fetchone()
+            exists_by_user = cursor.fetchone()
 
-            if exists:
-                # Update query (Existing Record)
+            if exists_by_user:
                 query = f"UPDATE {table} SET HashedPassword = ? WHERE Username = ?"
                 cursor.execute(query, (hashed, username))
                 print(f"[*] Credentials synced for: {username}")
             else:
-                # Sign Up query (New Record)
-                if table == "Admins":
-                    query = f"INSERT INTO Admins (FirstName, LastName, Role, Username, HashedPassword) VALUES (?, ?, ?, ?, ?)"
-                    params = (first_name, last_name, role, username, hashed)
-                elif table == "Creators":
-                    query = f'INSERT INTO Creators (FirstName, LastName, "Primary Niche", "Secondary Niche", Country, Username, HashedPassword) VALUES (?, ?, ?, ?, ?, ?, ?)'
-                    params = (first_name, last_name, role, "General", "Unknown", username, hashed)
-                
-                cursor.execute(query, params)
-                print(f"[+] New account created for: {username}")
+                # 2. If Username not found, try to find the original record by Name
+                cursor.execute(f"SELECT FirstName FROM {table} WHERE FirstName = ? AND LastName = ?", (first_name, last_name))
+                exists_by_name = cursor.fetchone()
+
+                if exists_by_name:
+                    # Found the original record! Attach the username and hash to it.
+                    query = f"UPDATE {table} SET Username = ?, HashedPassword = ? WHERE FirstName = ? AND LastName = ?"
+                    cursor.execute(query, (username, hashed, first_name, last_name))
+                    print(f"[*] Original record found for {first_name}. Credentials attached.")
+                else:
+                    # 3. Truly a new person: Insert new record
+                    if table == "Admins":
+                        query = f"INSERT INTO Admins (FirstName, LastName, Role, Username, HashedPassword) VALUES (?, ?, ?, ?, ?)"
+                        params = (first_name, last_name, role, username, hashed)
+                    elif table == "Creators":
+                        query = f'INSERT INTO Creators (FirstName, LastName, "Primary Niche", "Secondary Niche", Country, Username, HashedPassword) VALUES (?, ?, ?, ?, ?, ?, ?)'
+                        params = (first_name, last_name, role, "General", "Unknown", username, hashed)
+                    
+                    cursor.execute(query, params)
+                    print(f"[+] New account created for: {username}")
             
             conn.commit()
-            # After updating/inserting, return the data for the Greeting
             return table, first_name
 
         except sqlite3.Error as e:
@@ -70,5 +78,5 @@ class AuthSystem(DataManager):
         
     def plant_seeds(self):
         # One fell swoop: Syncs/Creates and could theoretically log them in
-        self.access_portal("Daniel", "Founder", "do3005", "crashcrash7", "Founder & CEO", "Admins")
-        self.access_portal("Alex", "Crimson", "a.crimson", "cruzofdreams", "Tech", "Creators")
+        self.sign_up("Daniel", "Founder", "do3005", "crashcrash7", "Founder & CEO", "Admins")
+        self.sign_up("Alex", "Crimson", "a.crimson", "cruzofdreams", "Tech", "Creators")
