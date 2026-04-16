@@ -7,55 +7,68 @@ class AuthSystem(DataManager):
         super().__init__(db_path)
 
     def hash_password(self, password):
-        return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt())
+        return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
     
     def check_password(self, password, hashed):
+        # Convert stored TEXT back to bytes for comparison
+        if isinstance(hashed, str):
+            hashed = hashed.encode('utf-8')
         return bcrypt.checkpw(password.encode('utf-8'), hashed)
     
-    def sign_up(self, email, username, password, table, first_name):
+    def sign_up(self, email, username, password):
+        
         conn, cursor = self.connect_database()
         hashed = self.hash_password(password)
 
         try:
-            cursor.execute(f"SELECT Username FROM {table} WHERE ContactEmail = ?", (email,))
-            cursor.execute(f"SELECT FirstName FROM {table} WHERE ContactEmail = ?", (email,))
+            # Check if email exists and if it already has a username
+            cursor.execute("SELECT Username, FirstName FROM Users WHERE Email = ?", (email,))
             record = cursor.fetchone()
 
             if record:
-                current_user = record[0]
-                if current_user is None or current_user == "":
-                    # VALIDATION: Only attach if a username hasn't been set yet
-                    query = f"UPDATE {table} SET Username = ?, HashedPassword = ? WHERE ContactEmail = ?"
-                    cursor.execute(query, (first_name, username, hashed, email))
-                    print(f"[*] Identity Verified. Credentials attached to {email}")
+                existing_username, first_name = record
+                
+                # Logic: Only allow 'sign up' if Username is empty or placeholder
+                # If your seeds already have usernames, you might adjust this condition
+                if existing_username is None or existing_username == "" or existing_username == "PENDING":
+                    query = "UPDATE Users SET Username = ?, HashedPassword = ? WHERE Email = ?"
+                    cursor.execute(query, (username, hashed, email))
+                    conn.commit()
+                    print(f"[*] Identity Verified for {first_name}. Credentials attached to {email}")
+                    return True
                 else:
-                    print("[!] Error: This account is already registered.")
-                    return None, None
+                    print(f"[!] Error: Account for {email} is already registered.")
+                    return False
             else:
                 print("[!] Access Denied: Email not recognized in Encrypt Inc Registry.")
-                return None, None
+                return False
 
-            conn.commit()
         except sqlite3.Error as e:
             print(f"Auth Error: {e}")
+            return False
+        finally:
+            conn.close()
 
     def authenticate_user(self, username, password):
         conn, cursor = self.connect_database()
         if not conn: return None, None
-        tables = ["Admins", "Creators", "Freelancers"]
-        for table in tables:
-            try:
-                cursor.execute(f"SELECT HashedPassword, FirstName FROM {table} WHERE Username = ?", (username,))
-                result = cursor.fetchone()
-                if result and self.check_password(password, result[0]):
-                    fn = result[1]
-                    conn.close()
-                    return table, fn
-            except sqlite3.Error:
-                continue 
-        if conn: conn.close()
+        
+        try:
+            cursor.execute("SELECT HashedPassword, FirstName, UserType FROM Users WHERE Username = ?", (username,))
+            result = cursor.fetchone()
+            
+            if result and self.check_password(password, result[0]):
+                first_name = result[1]
+                user_type = result[2]
+                return user_type, first_name
+                
+        except sqlite3.Error as e:
+            print(f"Database Error during auth: {e}")
+        finally:
+            conn.close()
+            
         return None, None
         
     def plant_seeds(self): 
-        self.sign_up("daniel@encrypt.com", "do3005", "crashcrash7", "Admins") 
-        self.sign_up("a.crimson@encrypt.com", "acronims", "cruzofdreams", "Creators")
+        self.sign_up("daniel@encrypt.com", "do3005", "crashcrash7") 
+        self.sign_up("a.crimson@encrypt.com", "acronims", "cruzofdreams")
