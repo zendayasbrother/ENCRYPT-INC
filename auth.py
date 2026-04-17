@@ -57,10 +57,14 @@ class AuthSystem(DataManager):
             cursor.execute("SELECT HashedPassword, FirstName, UserType FROM Users WHERE Username = ?", (username,))
             result = cursor.fetchone()
             
-            if result and self.check_password(password, result[0]):
-                first_name = result[1]
-                user_type = result[2]
-                return user_type, first_name
+            # CHECK: Does the user exist AND do they have a hashed password stored?
+            if result and result[0] is not None: 
+                if self.check_password(password, result[0]):
+                    return result[2], result[1] # UserType, FirstName
+                else:
+                    print("[!] Invalid Password.")
+            else:
+                print("[!] User not found or account not fully registered.")
                 
         except sqlite3.Error as e:
             print(f"Database Error during auth: {e}")
@@ -70,5 +74,4 @@ class AuthSystem(DataManager):
         return None, None
         
     def plant_seeds(self): 
-        self.sign_up("daniel@encrypt.com", "do3005", "crashcrash7") 
-        self.sign_up("a.crimson@encrypt.com", "acronims", "cruzofdreams")
+       pass
