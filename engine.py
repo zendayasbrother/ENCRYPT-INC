@@ -15,9 +15,12 @@ class ManagementSystem(AuthSystem):
         if user_type:
             print(f"\nLogin Successful! Welcome: {first_name} // ({user_type.upper()})")
             if user_type == "Admin":
+                # Admins can also view and accept / decline proposals sent by talent before deciding to search up and manipulate tables and records
                 self.display_interface() 
             else:
+                # Talent can only view their own records and can create proposals via algorithmic form; Pairings, Genre, Budget, etc.
                 print(f"Accessing {user_type} Dashboard...")
+                print()
         else:
             print("\nAccess Denied.")
 
@@ -25,6 +28,6 @@ class ManagementSystem(AuthSystem):
         name = input("Enter the table name to display: ")
         self.display_table(name)
         
-        # Admins can also view and accept / decline proposals sent by talent before deciding to search up and manipulate tables and records
-        # Talent can only view their own records and can create proposals via algorithmic form; Pairings, Genre, Budget, etc.
+        
+        
         
