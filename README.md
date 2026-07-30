@@ -75,26 +75,13 @@ Status Indicators:
 ---
 
 ## 🏗️ System Architecture
-
-#### Leadership Directory
-
-| Name | Role | Email |
-|------|------|-------|
-| Daniel Onyeakazi | Founder | daniel@encrypt.com |
-| Griff Lawson | Chief Operations Officer (Legal) | griff@encrypt.com |
-| Teni Olayinka | Chief Financial Officer | teni@encrypt.com |
-| Sven Talefson | Chief Brand & Communications | sven@encrypt.com |
-| Angela Keith | Head of Product | angela@encrypt.com |
-| Jade Zhang | Head of Legal Operations | jade@encrypt.com |
-| Willow Youn | Senior Data Scientist | willow@encrypt.com |
-
 ---
 ## 📋 User Workflows
 
 ### Admin Workflow
 
 ```
-LOGIN (Bcrypt Auth)
+LOGIN (Bcrypt > Django JWT Auth)
 │
 ├─ DASHBOARD
 │  ├─ View all projects & metrics
@@ -211,7 +198,7 @@ Final Score: Type + Budget + Duration + Genre + Title (Ascending = Higher Priori
 
 ## 💻 Implementation / Simulation Guide
 
-TBD
+TBD - Dencaps: Restaurant Supply Chain Simulation 
 
 
 ---
