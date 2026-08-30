@@ -8,7 +8,7 @@
 
 Encrypt Inc. is a **Talent-First Agency OS** designed to solve operational challenges faced by content creators and talent-driven media agencies. Inspired by BuzzFeed and Vice, this platform implements a **25% Agency / 75% Talent equity model** with an **smart waterfall payment system** that ensures fair compensation while protecting both parties through an escrow-backed contract framework.
 
-### The Problem We Solve
+### The Problem I Solve
 
 Modern creator economies lack transparent, scalable infrastructure for:
 - **Asset & IP Management**: Tracking ownership, vesting, and royalties across multiple projects
@@ -42,13 +42,13 @@ Status Indicators:
 
 ### Interface Guidelines
 
-- **Typography**: Helvetica (UI), Courier New (financial figures)
-- **Target**: Desktop GUI (Terminal in MVP, Web in v1+)
+- **Typography**: Helvetica (UI), Fira Code (financial figures)
+- **Target**: Desktop GUI (Terminal in MVP, Terminal + Web in v1+)
 - **Interaction**: Text hover feature with underline
-- **Aesthetic**: Utilitarian + Tactical/C2 control panel style
+- **Aesthetic**: Utilitarian + Brutalist UI
 - **Accessibility**: High contrast, keyboard navigation
 
-📐 **Figma Design Board**: [ENCRYPT-INC Project](https://www.figma.com/board/dib4MShNrXPhTTwbja7IIQ/ENCRYPT-INC?node-id=2001-44)
+📐 **Figma Design Board**: [insert updated]
 
 ---
 
@@ -78,7 +78,7 @@ Status Indicators:
 ---
 ## 📋 User Workflows
 
-### Admin Workflow
+### Envisioned Admin Workflow
 
 ```
 LOGIN (Bcrypt > Django JWT Auth)
@@ -185,20 +185,20 @@ Final Score: Type + Budget + Duration + Genre + Title (Ascending = Higher Priori
 
 
 **Technology Stack**
-- Backend: Python, PGSQL
+- Backend: Python, PGSQL, TS
 - Libraries: Pytest, Django, Faker, asyncio
 - Interface: Command-line terminal
 - Frontend: Tailwind CSS, React 
 
 **Core Features (DECOUPLED)**
-- Basic Plugin Architecture via Decoupling
+- Plugin + Microkernel Architecture via Decoupling
 - In house Insurance
 - Financial Ledger
-- Currency Conversion and Exchange
+- International Talent + Ops
 
 ## 💻 Implementation / Simulation Guide
 
-TBD - Dencaps: Restaurant Supply Chain Simulation 
+TBD - Interactive Lens (ROLEPLAY)
 
 
 ---
@@ -213,7 +213,7 @@ We welcome contributions from developers, designers, and domain experts. See [CO
 
 ## 📄 License
 
-Proprietary - NTH (Encrypt Inc.) © 2024. All rights reserved.
+Proprietary - Notation 'NTH' Studios © 2026. All rights reserved.
 
 ---
 
